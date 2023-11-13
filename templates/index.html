@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Mi Página Web</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@1,300&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Agbalumo&display=swap" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1 class="MainTitle">IdioMaster</h1>
+        <div class="subtitle">
+            <p>¡Existen buenas maneras de aprender Inglés, </p> <span class="snippet">IdioMaster </span> <p>es la mejor!</p>
+        </div>
+        
+        <form method="post" action="{{ url_for('start') }}">
+            <button class="button" data-text="Awesome">
+                <span class="actual-text">&nbsp;Comenzar&nbsp;</span>
+                <span aria-hidden="true" class="hover-text">&nbsp;Comenzar&nbsp;</span>
+            </button>
+        </form>
+    </div>
+</body>
+</html>

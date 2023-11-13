@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='start.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@1,300&display=swap" rel="stylesheet">
+    <title>IdioMaster</title>
+</head>
+<header style="min-width: 1000px;">
+    <h1 class="MainTitle">Quiz Question:</h1>
+
+        <p id="player1" >Player 1 <br> Score: <span id="player1-score">{{data.player1_score}}</span></p>
+        <p id="player2">Player 2 <br> Score: <span id="player2-score">{{data.player2_score}}</span></p>
+
+</header>
+<body>
+    <p class="pregunta">{{ data.question.pregunta }}</p>
+    <div class="options">
+        {% for option in data.question.options %}
+            <button class="learn-more" onclick="submitAnswer('{{ loop.index0 }}')">{{ option }}</button>
+        {% endfor %}
+        <label for="button" class="correct-answer-label" id="correct" style="color: #313131;">{{data.question.respuesta_correcta}}</label>
+    </div>
+    <button class="learn-more" onclick="reset()" id="reset"> Reset</button>
+</body>
+</html>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.js" integrity="sha512-+k1pnlgt4F1H8L7t3z95o3/KO+o78INEcXTbnoJQ/F2VqDVhWoaiVml/OEHv9HsVgxUaVW+IbiZPUJQfF/YxZw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+        //function submitAnswer(selectedIndex) {
+        //$.ajax({
+        //    type: 'POST',
+        //    url: '/submit_answer',
+        //    data: { selected_index: selectedIndex },
+        //    success: function(response) {
+        //        if (response.correct) {
+        //            alert('Correct answer! Player 1 Score: ' + response.player1_score + ', Player 2 Score: ' + response.player2_score);
+        //        } else {
+        //            alert('Incorrect answer! Player 1 Score: ' + response.player1_score + ', Player 2 Score: ' + response.player2_score);
+        //        }
+        //        // You can update the scores in the HTML if needed
+        //        $('#player1-score').text(response.player1_score);
+        //        $('#player2-score').text(response.player2_score);
+        //    },
+        //    error: function(error) {
+        //        console.error('Error submitting answer:', error);
+        //    }
+        //});
+        //}
+        function submitAnswer(selectedIndex) {
+
+            console.log(selectedIndex);
+            if(selectedIndex == parseInt($("#correct").text())){
+                $.ajax({
+                type: 'POST',
+                url: '/submit_answer',
+                data: { answer: selectedIndex },
+                });
+                Swal.fire({
+                  title: 'Correct Answer!',
+                  text: 'Player 1 Score: ' + (parseInt($("#player1-score").text()) + 1) + ', Player 2 Score: ' + $("#player2-score").text(),
+                  icon: 'success',
+                  confirmButtonText: 'Siguiente Pregunta'
+                }).then(() => {
+                console.log("RELOADING");
+                window.location.reload();
+                });
+                
+
+            $("#player1-score").text(parseInt($("#player1-score").text()) + 1);
+            } else {
+                Swal.fire({
+                  title: 'Incorrect Answer!',
+                  text: 'Player 1 Score: ' + $("#player1-score").text() + ', Player 2 Score: ' + $("#player2-score").text(),
+                  icon: 'error',
+                  confirmButtonText: 'Siguiente Pregunta'
+                }).then(() => {
+                console.log("RELOADING");
+                window.location.reload();
+                });
+                
+            }
+        }
+
+        function reset() {
+                $.ajax({
+                    type: 'POST',
+                    url: '/reset',
+                    data: { answer: 'hi' },
+                })
+                Swal.fire({
+                  title: 'Puntajes Restaurados',
+                  text: 'Player 1 Score: ' + 0 + ', Player 2 Score: ' + 0,
+                  icon: 'info',
+                  confirmButtonText: 'comenzar'
+                }).then(() => {
+                console.log("RELOADING");
+                window.location.reload();
+                });
+                
+            $("#player1-score").text(0);
+            $("#player2-score").text(0);
+        }
+</script>
